@@ -11,8 +11,7 @@ public class Configuration {
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
     private static Properties prop = null;
-    private static volatile Configuration configuration = null;
-    private static String CONFIG_FILE_LOCATION = "config.properties";
+    private static final String CONFIG_FILE_LOCATION = "config.properties";
 
     private Configuration() {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(CONFIG_FILE_LOCATION);
@@ -25,15 +24,12 @@ public class Configuration {
         }
     }
 
-    public synchronized static Configuration getInstance() {
-        if (configuration == null) {
-            synchronized (Configuration.class) {
-                if (configuration == null) {
-                    configuration = new Configuration();
-                }
-            }
-        }
-        return configuration;
+    public static Configuration getInstance() {
+        return ConfigurationHolder.instance;
+    }
+
+    private static class ConfigurationHolder {
+        private static final Configuration instance = new Configuration();
     }
 
     public String getProperty(String property) {
